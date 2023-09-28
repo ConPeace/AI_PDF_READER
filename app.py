@@ -27,7 +27,7 @@ openai.api_key = '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'
 
 app = Flask(__name__)
 
-handler = LogtailHandler(source_token="fLYjHRS3uJzPh1Xk5eErS5kA")  # replace with your actual source token
+handler = LogtailHandler(source_token="xFJadynP1yt8GZXNZ7qUUVfT")  # replace with your actual source token
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
@@ -52,10 +52,9 @@ else:
 
 # Function to index all text files
 def index_text_files():
-    if ix.is_locked():
-        ix.unlock()
     writer = ix.writer()
-    bylaws_dir = os.path.join(BASE_DIR, "table_extract")  # Update this path
+    bylaws_dir = os.path.join(BASE_DIR, "table_extract")
+  # Update this path
     for filename in os.listdir(bylaws_dir):
         if filename.endswith(".txt"):
             filepath = os.path.join(bylaws_dir, filename)
@@ -66,7 +65,6 @@ def index_text_files():
 
 # Index text files during startup
 index_text_files()
-
 
 
 # This function uses GPT-3 to get essential keywords from a question
