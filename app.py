@@ -96,21 +96,33 @@ def needs_indexing():
         return docnum == 0
 
 def index_text_files():
-    # ... (same as before)
+    writer = ix.writer()
+    bylaws_dir = os.path.join(BASE_DIR, "table_extract")
+    for filename in os.listdir(bylaws_dir):
+        if filename.endswith(".txt"):
+            filepath = os.path.join(bylaws_dir, filename)
+            with open(filepath, encoding="utf8") as f:
+                text = f.read()
+            writer.add_document(title=filename, content=text)
+    writer.commit()
 
-# Initialize Whoosh index
-schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
-index_dir = "indexdir"
+def initialize_whoosh():
+    global ix
+    schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
+    index_dir = "indexdir"
 
-if not os.path.exists(index_dir):
-    os.mkdir(index_dir)
-    ix = index.create_in(index_dir, schema)
-else:
-    ix = index.open_dir(index_dir)
+    if not os.path.exists(index_dir):
+        os.mkdir(index_dir)
+        ix = index.create_in(index_dir, schema)
+    else:
+        ix = index.open_dir(index_dir)
 
-# Index text files during startup only if needed
-if needs_indexing():
-    index_text_files()
+    # Index text files during startup only if needed
+    if needs_indexing():
+        index_text_files()
+
+# Call the initialization function
+initialize_whoosh()
 
 
 # Initialize Whoosh index
