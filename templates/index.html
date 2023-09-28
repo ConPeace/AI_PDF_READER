@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'style.css') }}"/>
+    <script src="{{ url_for('static', filename = 'app.js') }}"></script>
+    <title>City of Oak Bay AI Assistant</title>
+  </head>
+  <body>
+    <header>
+      <img src="{{ url_for('static', filename = 'Langford_Logo.jpeg') }}" />
+      <h1>City of Oak Bay AI Assistant</h1>
+    </header>
+    <div id="main-container">
+      <aside id="left-aside">
+        <h2> Select a Bylaw</h2>
+        <div id="bylawContainer">
+        </div>
+      </aside>
+      <main id="main-content">
+        <h2 id="currentBylaw"></h2>
+        <h2>Ask AIMBO AI Assistant a Question</h2>
+        <textarea id="userQuestion" class="inputQuestion" placeholder="Enter your question"></textarea>
+        <button onclick="submitQuestion()" class="styledElement">Submit</button>
+        <h2>AIMBO's Answer</h2>
+        <div id="output"></div>
+      </main>
+       <aside id="right-aside">
+            <h2>How to Use Personal AI Assistant</h2>
+            <ul>
+                <li>Select the bylaw that you need information on.</li>
+                <li>Formulate a specific question regarding the selected bylaw.</li>
+                <li>Click the 'Submit' button to get your answer.</li>
+                <li>Note: Due to this being a prototype, please allow a few seconds for the response. Make sure to only click 'Submit' once to avoid duplicate responses.</li>
+            </ul>
+            <h2></h2>
+            <ul>
+               <li></li>
+            </ul>
+          <h2></h2>
+          <ul>
+             <li></li>
+          </ul>
+        </aside>
+    </div>
+  </body>
+</html>
