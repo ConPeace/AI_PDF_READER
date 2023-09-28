@@ -27,7 +27,7 @@ openai.api_key = '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'
 
 app = Flask(__name__)
 
-handler = LogtailHandler(source_token="xFJadynP1yt8GZXNZ7qUUVfT")  # replace with your actual source token
+handler = LogtailHandler(source_token="fLYjHRS3uJzPh1Xk5eErS5kA")  # replace with your actual source token
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
