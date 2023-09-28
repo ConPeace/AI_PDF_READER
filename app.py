@@ -50,9 +50,6 @@ if not os.path.exists(index_dir):
 else:
     ix = index.open_dir(index_dir)
 
-def count_tokens(text):
-    return len(openai.Completion.create(prompt=text, model="text-davinci-003", stop=None, temperature=0).choices[0]['usage']['total_tokens'])
-
 
 
 
@@ -75,8 +72,7 @@ def get_keywords(question):
         
         extracted_keywords = response.choices[0].message['content']
 
-        token_usage = count_tokens(response['prompt']['content'])
-        app.logger.info(f"Tokens used for this call: {token_usage}")
+
 
         # Check if extracted_keywords is a string
         if isinstance(extracted_keywords, str):
@@ -84,8 +80,6 @@ def get_keywords(question):
         else:
             keywords = extracted_keywords  # assuming it's already a list
 
-        app.logger.info(f"Original question: {question}")
-        app.logger.info(f"Extracted keywords: {', '.join(keywords)}")
 
         if not keywords:
             app.logger.warning("No keywords extracted.")
@@ -175,9 +169,7 @@ def get_answer(question, relevant_content):
             max_tokens=1000
         )
         answer = response.choices[0].message['content']
-        app.logger.info(f"Generated answer: {answer}")
-        token_usage = count_tokens(response['choices'][0]['message']['content'])
-        app.logger.info(f"Tokens used for this call: {token_usage}")
+       
 
 
         if not answer:
