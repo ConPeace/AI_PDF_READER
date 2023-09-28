@@ -42,7 +42,7 @@ app.logger.setLevel(logging.INFO)
 
 # Initialize Whoosh index
 schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
-
+index_dir = "indexdir"
 
 if not os.path.exists(index_dir):
     os.mkdir(index_dir)
@@ -52,6 +52,8 @@ else:
 
 # Function to index all text files
 def index_text_files():
+    if ix.is_locked():
+        ix.unlock()
     writer = ix.writer()
     bylaws_dir = os.path.join(BASE_DIR, "table_extract")  # Update this path
     for filename in os.listdir(bylaws_dir):
@@ -103,6 +105,25 @@ def get_keywords(question):
     except OpenAIError as e:
         app.logger.error(f"OpenAI API call failed during keyword extraction: {e}")
         raise
+
+def needs_indexing():
+    with ix.searcher() as searcher:
+        docnum = len(list(searcher.documents()))
+        return docnum == 0
+
+# Initialize Whoosh index
+schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
+index_dir = "indexdir"
+
+if not os.path.exists(index_dir):
+    os.mkdir(index_dir)
+    ix = index.create_in(index_dir, schema)
+else:
+    ix = index.open_dir(index_dir)
+
+# Index text files during startup only if needed
+if needs_indexing():
+    index_text_files()
 
 
     
