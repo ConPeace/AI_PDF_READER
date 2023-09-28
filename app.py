@@ -42,7 +42,7 @@ app.logger.setLevel(logging.INFO)
 
 # Initialize Whoosh index
 schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
-index_dir = "indexdir"
+
 
 if not os.path.exists(index_dir):
     os.mkdir(index_dir)
