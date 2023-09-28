@@ -34,8 +34,9 @@ app.logger.setLevel(logging.INFO)
 # Logging setup
 handler = logging.handlers.SysLogHandler(address=("logs-01.loggly.com", 514))
 formatter = logging.Formatter(
-    'Python: { "loggerName":"%(name)s", "timestamp":"%(asctime)s", "pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}'
+    'Python: { "loggerName":"%(name)s", "timestamp":"%(asctime)s", "pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s", "userQuestion":"%(user_question)s", "tokenCount":"%(token_count)d", "response":"%(response)s"}'
 )
+
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
@@ -416,9 +417,6 @@ def api():
             raise ValueError('Failed to find best positions')
 
         extracted_content = get_surrounding_content(relevant_content, best_positions_result)
-        print(f"Content around best positions {best_positions_result}:\n")
-        print(extracted_content)
-        print("-" * 80)
 
         # Step 3: Use GPT-3 to generate a contextual answer based on relevant_content and the original question
         answer = get_answer(question, extracted_content)
@@ -426,12 +424,22 @@ def api():
             app.logger.error("Failed to generate an answer using the provided content and OpenAI.")
             raise ValueError('Failed to generate an answer')
 
+        # Logging the user's question, token count, and the response
+        token_count = len(question.split())  # assuming tokens are words
+        extra_info = {
+            'user_question': question,
+            'token_count': token_count,
+            'response': answer
+        }
+        app.logger.info("Processed user question and generated a response.", extra=extra_info)
+
         # Step 4: Return the generated answer
         return jsonify({'answer': answer})
 
     except Exception as e:
         app.logger.error(f"Error processing request: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 
 
