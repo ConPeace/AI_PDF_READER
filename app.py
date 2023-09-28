@@ -23,7 +23,7 @@ bylaws_dir = os.path.join(BASE_DIR, "table_extract")
 
 
 
-openai.api_key = 'OPENAI_API_KEY'
+openai.api_key = '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'
 
 app = Flask(__name__)
 
