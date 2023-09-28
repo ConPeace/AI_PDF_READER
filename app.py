@@ -50,21 +50,7 @@ if not os.path.exists(index_dir):
 else:
     ix = index.open_dir(index_dir)
 
-# Function to index all text files
-def index_text_files():
-    writer = ix.writer()
-    bylaws_dir = os.path.join(BASE_DIR, "table_extract")
-  # Update this path
-    for filename in os.listdir(bylaws_dir):
-        if filename.endswith(".txt"):
-            filepath = os.path.join(bylaws_dir, filename)
-            with open(filepath, encoding="utf8") as f:
-                text = f.read()
-            writer.add_document(title=filename, content=text)
-    writer.commit()
 
-# Index text files during startup
-index_text_files()
 
 
 # This function uses GPT-3 to get essential keywords from a question
@@ -108,6 +94,24 @@ def needs_indexing():
     with ix.searcher() as searcher:
         docnum = len(list(searcher.documents()))
         return docnum == 0
+
+def index_text_files():
+    # ... (same as before)
+
+# Initialize Whoosh index
+schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
+index_dir = "indexdir"
+
+if not os.path.exists(index_dir):
+    os.mkdir(index_dir)
+    ix = index.create_in(index_dir, schema)
+else:
+    ix = index.open_dir(index_dir)
+
+# Index text files during startup only if needed
+if needs_indexing():
+    index_text_files()
+
 
 # Initialize Whoosh index
 schema = Schema(title=ID(stored=True), content=TEXT(stored=True))
