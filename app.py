@@ -23,13 +23,11 @@ bylaws_dir = os.path.join(BASE_DIR, "table_extract")
 
 
 
-openai.api_key = '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'
+openai.api_key = ''
 
 app = Flask(__name__)
 
-handler = LogtailHandler(source_token="fLYjHRS3uJzPh1Xk5eErS5kA")  # replace with your actual source token
-app.logger.addHandler(handler)
-app.logger.setLevel(logging.INFO)
+)
 
 # Logging setup
 handler = logging.handlers.SysLogHandler(address=("logs-01.loggly.com", 514))
